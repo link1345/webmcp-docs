@@ -1,0 +1,53 @@
+{
+  "name": "webmcp-docs",
+  "version": "0.1.0",
+  "description": "Expose framework-agnostic documentation search and retrieval through WebMCP.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.ja.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup ./src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:imports": "node scripts/smoke-imports.mjs",
+    "check": "bun run typecheck && bun run test && bun run build && bun run test:imports"
+  },
+  "keywords": [
+    "webmcp",
+    "documentation",
+    "ai",
+    "search"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/link1345/webmcp-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/link1345/webmcp-docs/issues"
+  },
+  "homepage": "https://github.com/link1345/webmcp-docs#readme",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
