@@ -2,7 +2,7 @@
 
 [日本語](./README.ja.md)
 
-**webmcp-docs** : [![NPM Version](https://www.npmjs.com/package/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://www.npmjs.com/package/webmcp-docs)<br>
+**webmcp-docs:** [![NPM Version](https://img.shields.io/npm/v/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://img.shields.io/npm/dw/webmcp-docs)<br>
 
 `webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM. It uses `@mcp-b/global` to provide the WebMCP polyfill and MCP transports while preserving native browser support.
 
