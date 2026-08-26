@@ -101,17 +101,3 @@ Node.js 20 以上と Bun が必要だ。
 bun install
 bun run check
 ```
-
-## npm への公開
-
-プレリリースではない GitHub Release を公開すると、全チェックの成功後に npm へ自動公開する。先に `package.json` のバージョンを更新し、Release タグはそのバージョンと一致する `vX.Y.Z` 形式にする。
-
-Workflow を使う前に、npm のパッケージ設定で Trusted Publisher を次の値に設定する。
-
-- Provider: GitHub Actions
-- Repository owner: `link1345`
-- Repository: `webmcp-docs`
-- Workflow filename: `publish.yml`
-- Allowed action: `npm publish`
-
-リリースは npm token を使わず、短時間だけ有効な OIDC 認証で provenance 付きの公開を行う。GitHub Actions secret は不要だ。
