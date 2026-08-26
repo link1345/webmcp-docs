@@ -105,3 +105,16 @@ Node.js 20 以上と Bun が必要です。
 bun install
 bun run check
 ```
+
+### Astroサンプル
+
+リポジトリをcloneした状態で依存関係を導入し、最小のAstroサイトを起動できます。
+
+```sh
+bun install
+bun run example:dev
+```
+
+ブラウザで `http://127.0.0.1:4321` を開くと、固定のProviderを使って
+`search_docs` と `get_doc` をWebMCPへ登録します。サンプルの本体は
+[`examples/astro/src/pages/index.astro`](./examples/astro/src/pages/index.astro) です。

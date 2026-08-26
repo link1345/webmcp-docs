@@ -105,3 +105,16 @@ Node.js 20 or later and Bun are required.
 bun install
 bun run check
 ```
+
+### Astro example
+
+Install the repository dependencies and start the minimal Astro site:
+
+```sh
+bun install
+bun run example:dev
+```
+
+Open `http://127.0.0.1:4321` to register `search_docs` and `get_doc` with
+WebMCP using a fixed in-memory provider. The example lives at
+[`examples/astro/src/pages/index.astro`](./examples/astro/src/pages/index.astro).
