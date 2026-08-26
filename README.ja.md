@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリだ。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できる。
+`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリだ。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できる。`@mcp-b/global` により WebMCP polyfill と MCP transport を提供しつつ、ブラウザのネイティブ実装にも対応する。
 
 ## インストール
 
@@ -89,9 +89,11 @@ Provider の例外や stack trace はツール結果へ公開しない。
 
 ## 対応環境
 
-対応ブラウザでは、現在の WebMCP Imperative API である `document.modelContext.registerTool()` を利用する。非対応ブラウザや SSR では `status: "unsupported"` を返し、通常のドキュメントサイトの動作を妨げない。
+ブラウザ環境では `@mcp-b/global` が `document.modelContext` を初期化する。ネイティブ WebMCP 実装があればそれを維持し、それ以外では polyfill と MCP transport を導入する。その後、現在の WebMCP Imperative API である `document.modelContext.registerTool()` を通じてツールを登録する。SSR では `status: "unsupported"` を返し、通常のドキュメントサイトの動作を妨げない。
 
-WebMCP は実験的な仕様であり、ブラウザ API は今後変更される可能性がある。本ライブラリでは、その API surface を内部アダプターへ隔離している。
+`@mcp-b/global` の transport はデフォルト設定を利用する。接続元originを制限する場合は、`registerDocsWebMcp` を呼び出す前に `window.__webModelContextOptions` を設定する。詳細は [`@mcp-b/global` の設定リファレンス](https://docs.mcp-b.ai/packages/global/reference) を参照してほしい。
+
+WebMCP は実験的な仕様であり、ブラウザ API は今後変更される可能性がある。本ライブラリでは、その API surface を `@mcp-b/webmcp-types` で型付けしたアダプターへ隔離している。
 
 ## 開発
 
