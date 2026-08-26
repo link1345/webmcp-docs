@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-**webmcp-docs** : [![NPM Version](https://www.npmjs.com/package/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://www.npmjs.com/package/webmcp-docs)<br>
+**webmcp-docs:** [![NPM Version](https://img.shields.io/npm/v/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://img.shields.io/npm/dw/webmcp-docs)<br>
 
 `webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリです。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できます。`@mcp-b/global` により WebMCP polyfill と MCP transport を提供しつつ、ブラウザのネイティブ実装にも対応します。
 
