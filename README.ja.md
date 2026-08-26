@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリだ。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できる。
+`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリです。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できる。
 
 ## インストール
 
@@ -75,11 +75,11 @@ const provider: DocsProvider = {
 };
 ```
 
-`search` は `id`、`title`、`excerpt` を持つ結果を返す。`url` と `section` も任意で追加できる。`getDocument` は `id`、`title`、`content` を返し、文書がなければ `null` を返す。`canonicalUrl` と `headings` は任意だ。
+`search` は `id`、`title`、`excerpt` を持つ結果を返す。`url` と `section` も任意で追加できる。`getDocument` は `id`、`title`、`content` を返し、文書がなければ `null` を返す。`canonicalUrl` と `headings` は任意です。
 
 ## ツール結果とエラー
 
-両ツールは、成功時に `{ ok: true, data }`、失敗時に `{ ok: false, error }` を返す。エラーコードは次の3種類だ。
+両ツールは、成功時に `{ ok: true, data }`、失敗時に `{ ok: false, error }` を返す。エラーコードは次の3種類です。
 
 - `INVALID_INPUT`: 入力が schema を満たさない
 - `NOT_FOUND`: `get_doc` で文書が存在しない
@@ -95,7 +95,7 @@ WebMCP は実験的な仕様であり、ブラウザ API は今後変更され�
 
 ## 開発
 
-Node.js 20 以上と Bun が必要だ。
+Node.js 20 以上と Bun が必要です。
 
 ```sh
 bun install
