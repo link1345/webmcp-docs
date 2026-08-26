@@ -1,21 +1,23 @@
-export interface WebMcpTool {
-  name: string;
+import type {
+  InputSchema,
+  ModelContext,
+  ModelContextTool,
+  WebMcpToolInput,
+} from "@mcp-b/webmcp-types";
+
+export type WebMcpTool = ModelContextTool<
+  WebMcpToolInput,
+  unknown
+> & {
   title: string;
-  description: string;
-  inputSchema: Record<string, unknown>;
+  inputSchema: InputSchema;
   annotations: {
     readOnlyHint: boolean;
     untrustedContentHint: boolean;
   };
-  execute(input: object): Promise<unknown>;
-}
+};
 
-interface WebMcpModelContext {
-  registerTool(
-    tool: WebMcpTool,
-    options?: { signal?: AbortSignal },
-  ): void | PromiseLike<void>;
-}
+type WebMcpModelContext = Pick<ModelContext, "registerTool">;
 
 export type WebMcpTargetResult =
   | {
@@ -38,7 +40,16 @@ function hasRegisterTool(value: unknown): value is WebMcpModelContext {
   );
 }
 
-export function getWebMcpTarget(): WebMcpTargetResult {
+export async function getWebMcpTarget(): Promise<WebMcpTargetResult> {
+  try {
+    // @mcp-b/global is idempotent. It preserves native WebMCP when available and
+    // installs the polyfill plus MCP transports in other supported browsers.
+    const { initializeWebModelContext } = await import("@mcp-b/global");
+    initializeWebModelContext();
+  } catch {
+    return { status: "failed" };
+  }
+
   let documentValue: unknown;
 
   try {
@@ -75,5 +86,5 @@ export async function registerWebMcpTool(
   tool: WebMcpTool,
   signal: AbortSignal,
 ): Promise<void> {
-  await target.registerTool.call(target.receiver, tool, { signal });
+  await Reflect.apply(target.registerTool, target.receiver, [tool, { signal }]);
 }

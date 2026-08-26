@@ -24,12 +24,17 @@
     "node": ">=20"
   },
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "tsup ./src/index.ts --format esm,cjs --dts --clean",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:imports": "node scripts/smoke-imports.mjs",
-    "check": "bun run typecheck && bun run test && bun run build && bun run test:imports"
+    "check": "bun run typecheck && bun run test && bun run build && bun run test:imports",
+    "prepublishOnly": "bun run check"
   },
   "keywords": [
     "webmcp",
@@ -49,5 +54,9 @@
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@mcp-b/global": "^5.0.1",
+    "@mcp-b/webmcp-types": "^5.0.1"
   }
 }

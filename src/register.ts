@@ -48,7 +48,7 @@ export async function registerDocsWebMcp(
     return failedRegistration();
   }
 
-  const target = getWebMcpTarget();
+  const target = await getWebMcpTarget();
   if (target.status === "unsupported") {
     return unsupportedRegistration;
   }

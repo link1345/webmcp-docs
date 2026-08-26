@@ -2,7 +2,7 @@
 
 [日本語](./README.ja.md)
 
-`webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM.
+`webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM. It uses `@mcp-b/global` to provide the WebMCP polyfill and MCP transports while preserving native browser support.
 
 ## Installation
 
@@ -89,9 +89,11 @@ Provider exceptions and stack traces are not exposed in tool results.
 
 ## Supported environments
 
-In supported browsers, the library uses the current WebMCP Imperative API, `document.modelContext.registerTool()`. In unsupported browsers and during server-side rendering, it returns `status: "unsupported"` without interfering with the documentation site.
+In browser environments, `@mcp-b/global` initializes `document.modelContext`, preserving a native WebMCP implementation when available and otherwise installing its polyfill and MCP transports. The library then registers tools through the current WebMCP Imperative API, `document.modelContext.registerTool()`. During server-side rendering it returns `status: "unsupported"` without interfering with the documentation site.
 
-WebMCP is experimental, and its browser API may change. This library isolates that API surface behind an internal adapter.
+`@mcp-b/global` uses its default transport configuration. To restrict transport origins, set `window.__webModelContextOptions` before calling `registerDocsWebMcp`, following the [`@mcp-b/global` configuration reference](https://docs.mcp-b.ai/packages/global/reference).
+
+WebMCP is experimental, and its browser API may change. This library isolates that API surface behind an adapter typed with `@mcp-b/webmcp-types`.
 
 ## Development
 

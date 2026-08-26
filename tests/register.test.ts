@@ -256,7 +256,7 @@ describe("tool execution", () => {
     await registerDocsWebMcp({ provider: createProvider({ search }) });
 
     const result = await getTool(supported.tools, "search_docs").execute(
-      input as object,
+      input as Record<string, unknown>,
     );
 
     expect(result).toMatchObject({
