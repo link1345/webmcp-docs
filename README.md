@@ -101,3 +101,17 @@ Node.js 20 or later and Bun are required.
 bun install
 bun run check
 ```
+
+## Publishing
+
+Publishing a non-prerelease GitHub Release automatically publishes the package to npm after running the full check. Update the version in `package.json` first; the release tag must match it using the `vX.Y.Z` format.
+
+Before using the workflow, configure the package's Trusted Publisher on npm with these values:
+
+- Provider: GitHub Actions
+- Repository owner: `link1345`
+- Repository: `webmcp-docs`
+- Workflow filename: `publish.yml`
+- Allowed action: `npm publish`
+
+Releases use short-lived OIDC credentials and publish provenance automatically. No npm token or GitHub Actions secret is needed.
