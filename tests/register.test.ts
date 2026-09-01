@@ -112,6 +112,9 @@ describe("registration", () => {
       "search_docs",
       "get_doc",
     ]);
+    expect(getTool(supported.tools, "get_doc").description).toBe(
+      "Retrieve a complete documentation page by its ID or URL. Returns its ID, title, full text content, and optional canonical URL and headings.",
+    );
     for (const tool of supported.tools) {
       expect(tool.annotations).toEqual({
         readOnlyHint: true,
@@ -144,6 +147,18 @@ describe("registration", () => {
       "get_doc",
       "list_docs",
     ]);
+    expect(getTool(supported.tools, "list_docs").inputSchema).toEqual({
+      type: "object",
+      properties: {
+        section: {
+          type: "string",
+          minLength: 1,
+          description: "Optional section name used to return only pages in that section.",
+        },
+      },
+      required: [],
+      additionalProperties: false,
+    });
     expect(supported.signals).toHaveLength(3);
   });
 

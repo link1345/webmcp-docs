@@ -49,6 +49,7 @@ const listDocsInputSchema = {
       description: "Optional section name used to return only pages in that section.",
     },
   },
+  required: [],
   additionalProperties: false,
 } as const;
 
@@ -162,7 +163,7 @@ export function createDocsTools(
     {
       name: "get_doc",
       title: "Get documentation page",
-      description: "Retrieve a complete documentation page by its ID or URL.",
+      description: "Retrieve a complete documentation page by its ID or URL. Returns its ID, title, full text content, and optional canonical URL and headings.",
       inputSchema: getDocInputSchema,
       annotations,
       execute: (input) => getDoc(provider, input),
