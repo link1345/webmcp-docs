@@ -6,7 +6,7 @@
 
 `webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM. When navigation pages are registered, `list_docs` also exposes the other pages and their sections. It uses `@mcp-b/global` to provide the WebMCP polyfill and MCP transports while preserving native browser support.
 
-When this package is configured correctly, anyone can achieve a perfect score of 100 on `webmcp.ora.ai`!
+When this package is configured correctly, anyone can achieve a perfect score of 100 on `webmcp.ora.ai`! See an [actual page that achieved 100](https://webmcp.ora.ai/gua.orizika.com).
 
 ## Installation
 
