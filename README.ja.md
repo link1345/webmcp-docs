@@ -4,7 +4,9 @@
 
 **webmcp-docs:** [![NPM Version](https://img.shields.io/npm/v/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://img.shields.io/npm/dw/webmcp-docs)<br>
 
-`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリです。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できます。`@mcp-b/global` により WebMCP polyfill と MCP transport を提供しつつ、ブラウザのネイティブ実装にも対応します。
+`webmcp-docs` は、ドキュメントサイトの検索とページ取得を WebMCP ツールとして公開する、フレームワーク非依存のライブラリです。AI エージェントは検索フォームや DOM 構造を推測せず、`search_docs` と `get_doc` を使って意味ベースでドキュメントを参照できます。ナビゲーション用ページを登録すると、`list_docs` で同じセクションを含む他のページも公開できます。`@mcp-b/global` により WebMCP polyfill と MCP transport を提供しつつ、ブラウザのネイティブ実装にも対応します。
+
+`webmcp.ora.ai` において、このパッケージが正しく設定されていれば誰でも100点を取ることができます！実際に100点を取ったページは[こちら](https://webmcp.ora.ai/gua.orizika.com)です。
 
 ## インストール
 
@@ -18,6 +20,10 @@ bun add webmcp-docs
 import { registerDocsWebMcp } from "webmcp-docs";
 
 const registration = await registerDocsWebMcp({
+  pages: [
+    { id: "/guide/getting-started", title: "はじめに", section: "ガイド" },
+    { id: "/guide/configuration", title: "設定", section: "ガイド" },
+  ],
   provider: {
     async search(query) {
       const response = await fetch(`/search-index.json?q=${encodeURIComponent(query)}`);
@@ -78,6 +84,10 @@ const provider: DocsProvider = {
 ```
 
 `search` は `id`、`title`、`excerpt` を持つ結果を返す。`url` と `section` も任意で追加できる。`getDocument` は `id`、`title`、`content` を返し、文書がなければ `null` を返す。`canonicalUrl` と `headings` は任意です。
+
+## ナビゲーション用ページ
+
+`pages` 配列を渡すと、検索・取得ツールに加えて `list_docs` を登録する。各ページで必須なのは `id` と `title` だけで、`url` と `section` は任意です。エージェントは `{}` ですべての登録ページを取得でき、`{ section: "ガイド" }` のようにセクションで絞り込める。`pages` を省略するか空配列にした場合は、従来どおり2ツールだけを登録する。
 
 ## ツール結果とエラー
 

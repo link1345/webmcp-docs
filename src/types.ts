@@ -22,6 +22,13 @@ export interface DocsDocument {
   headings?: readonly DocsHeading[];
 }
 
+export interface DocsPage {
+  id: string;
+  title: string;
+  url?: string;
+  section?: string;
+}
+
 export interface DocsProvider {
   search(query: string): Awaitable<readonly DocsSearchResult[]>;
   getDocument(id: string): Awaitable<DocsDocument | null>;
@@ -29,6 +36,8 @@ export interface DocsProvider {
 
 export interface RegisterDocsWebMcpOptions {
   provider: DocsProvider;
+  /** Pages exposed to agents for documentation navigation. */
+  pages?: readonly DocsPage[];
 }
 
 export type DocsToolErrorCode =
@@ -51,6 +60,10 @@ export interface SearchDocsData {
 
 export interface GetDocData {
   document: DocsDocument;
+}
+
+export interface ListDocsData {
+  pages: DocsPage[];
 }
 
 export interface RegisteredDocsWebMcp {

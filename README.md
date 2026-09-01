@@ -4,7 +4,9 @@
 
 **webmcp-docs:** [![NPM Version](https://img.shields.io/npm/v/webmcp-docs)](https://www.npmjs.com/package/webmcp-docs) ![NPM Downloads](https://img.shields.io/npm/dw/webmcp-docs)<br>
 
-`webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM. It uses `@mcp-b/global` to provide the WebMCP polyfill and MCP transports while preserving native browser support.
+`webmcp-docs` is a framework-agnostic library that exposes documentation search and retrieval as WebMCP tools. AI agents can use `search_docs` and `get_doc` to access documentation semantically instead of guessing how to operate search forms or navigate the DOM. When navigation pages are registered, `list_docs` also exposes the other pages and their sections. It uses `@mcp-b/global` to provide the WebMCP polyfill and MCP transports while preserving native browser support.
+
+When this package is configured correctly, anyone can achieve a perfect score of 100 on `webmcp.ora.ai`! See an [actual page that achieved 100](https://webmcp.ora.ai/gua.orizika.com).
 
 ## Installation
 
@@ -18,6 +20,10 @@ bun add webmcp-docs
 import { registerDocsWebMcp } from "webmcp-docs";
 
 const registration = await registerDocsWebMcp({
+  pages: [
+    { id: "/guide/getting-started", title: "Getting started", section: "Guide" },
+    { id: "/guide/configuration", title: "Configuration", section: "Guide" },
+  ],
   provider: {
     async search(query) {
       const response = await fetch(`/search-index.json?q=${encodeURIComponent(query)}`);
@@ -78,6 +84,10 @@ const provider: DocsProvider = {
 ```
 
 `search` returns results containing `id`, `title`, and `excerpt`. It may also include `url` and `section`. `getDocument` returns `id`, `title`, and `content`, or `null` when the document does not exist. `canonicalUrl` and `headings` are optional.
+
+## Navigation pages
+
+Pass a `pages` array to register `list_docs` alongside the search and retrieval tools. Each page needs only an `id` and `title`; `url` and `section` are optional. Agents can list every registered page with `{}` or pass `{ section: "Guide" }` to narrow the result. When `pages` is omitted or empty, only the original two tools are registered.
 
 ## Tool results and errors
 
