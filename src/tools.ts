@@ -1,10 +1,12 @@
 import type {
   DocsProvider,
+  DocsPage,
   DocsToolResult,
   GetDocData,
+  ListDocsData,
   SearchDocsData,
 } from "./types.js";
-import { normalizeDocument, normalizeSearchResults, readSingleStringInput } from "./validation.js";
+import { normalizeDocument, normalizeSearchResults, readOptionalSectionInput, readSingleStringInput } from "./validation.js";
 import type { WebMcpTool } from "./webmcp-adapter.js";
 
 const annotations = {
@@ -35,6 +37,18 @@ const getDocInputSchema = {
     },
   },
   required: ["id"],
+  additionalProperties: false,
+} as const;
+
+const listDocsInputSchema = {
+  type: "object",
+  properties: {
+    section: {
+      type: "string",
+      minLength: 1,
+      description: "Optional section name used to return only pages in that section.",
+    },
+  },
   additionalProperties: false,
 } as const;
 
@@ -111,8 +125,32 @@ async function getDoc(
   }
 }
 
-export function createDocsTools(provider: DocsProvider): readonly WebMcpTool[] {
-  return [
+function listDocs(
+  pages: readonly DocsPage[],
+  input: unknown,
+): DocsToolResult<ListDocsData> {
+  const section = readOptionalSectionInput(input);
+  if (section === null) {
+    return {
+      ok: false,
+      error: {
+        code: "INVALID_INPUT",
+        message: "Expected an object containing at most a non-empty string \"section\".",
+      },
+    };
+  }
+
+  const selected = section === undefined
+    ? pages
+    : pages.filter((page) => page.section === section);
+  return { ok: true, data: { pages: [...selected] } };
+}
+
+export function createDocsTools(
+  provider: DocsProvider,
+  pages: readonly DocsPage[] = [],
+): readonly WebMcpTool[] {
+  const tools: WebMcpTool[] = [
     {
       name: "search_docs",
       title: "Search documentation",
@@ -130,4 +168,17 @@ export function createDocsTools(provider: DocsProvider): readonly WebMcpTool[] {
       execute: (input) => getDoc(provider, input),
     },
   ];
+
+  if (pages.length > 0) {
+    tools.push({
+      name: "list_docs",
+      title: "List documentation pages",
+      description: "List pages available for documentation navigation, including other pages in the same section.",
+      inputSchema: listDocsInputSchema,
+      annotations,
+      execute: (input) => listDocs(pages, input),
+    });
+  }
+
+  return tools;
 }

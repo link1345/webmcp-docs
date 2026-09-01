@@ -7,6 +7,7 @@ import type {
   UnsupportedDocsWebMcp,
 } from "./types.js";
 import { getWebMcpTarget, registerWebMcpTool } from "./webmcp-adapter.js";
+import { normalizePages } from "./validation.js";
 
 const registrations = new WeakMap<object, Promise<DocsWebMcpRegistration>>();
 
@@ -48,6 +49,12 @@ export async function registerDocsWebMcp(
     return failedRegistration();
   }
 
+  const pagesValue = (options as { pages?: unknown }).pages;
+  const pages = pagesValue === undefined ? [] : normalizePages(pagesValue);
+  if (pages === null) {
+    return failedRegistration();
+  }
+
   const target = await getWebMcpTarget();
   if (target.status === "unsupported") {
     return unsupportedRegistration;
@@ -66,7 +73,7 @@ export async function registerDocsWebMcp(
     const controller = new AbortController();
 
     try {
-      for (const tool of createDocsTools(options.provider)) {
+      for (const tool of createDocsTools(options.provider, pages)) {
         await registerWebMcpTool(target, tool, controller.signal);
       }
 

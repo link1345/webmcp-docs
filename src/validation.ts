@@ -1,6 +1,7 @@
 import type {
   DocsDocument,
   DocsHeading,
+  DocsPage,
   DocsSearchResult,
 } from "./types.js";
 
@@ -27,6 +28,27 @@ export function readSingleStringInput(
   }
 
   const normalized = value.trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
+export function readOptionalSectionInput(input: unknown): string | undefined | null {
+  if (!isRecord(input)) {
+    return null;
+  }
+
+  const keys = Object.keys(input);
+  if (keys.length === 0) {
+    return undefined;
+  }
+  if (!hasOnlyKey(input, "section")) {
+    return null;
+  }
+
+  const section = input.section;
+  if (typeof section !== "string") {
+    return null;
+  }
+  const normalized = section.trim();
   return normalized.length > 0 ? normalized : null;
 }
 
@@ -85,6 +107,44 @@ export function normalizeSearchResults(
   }
 
   return results;
+}
+
+function normalizePage(value: unknown): DocsPage | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const id = readOptionalString(value, "id");
+  const title = readOptionalString(value, "title");
+  const url = readOptionalString(value, "url");
+  const section = readOptionalString(value, "section");
+
+  if (!id || !title || url === null || section === null) {
+    return null;
+  }
+
+  return {
+    id,
+    title,
+    ...(url === undefined ? {} : { url }),
+    ...(section === undefined ? {} : { section }),
+  };
+}
+
+export function normalizePages(value: unknown): DocsPage[] | null {
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
+  const pages: DocsPage[] = [];
+  for (const item of value) {
+    const page = normalizePage(item);
+    if (page === null) {
+      return null;
+    }
+    pages.push(page);
+  }
+  return pages;
 }
 
 function normalizeHeading(value: unknown): DocsHeading | null {

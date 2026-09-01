@@ -126,6 +126,27 @@ describe("registration", () => {
     expect(supported.signals[0]).toBe(supported.signals[1]);
   });
 
+  it("registers list_docs when navigation pages are provided", async () => {
+    const supported = createSupportedDocument();
+    setDocument(supported.document);
+
+    const result = await registerDocsWebMcp({
+      provider: createProvider(),
+      pages: [
+        { id: "/guide/start", title: "Start", section: "Guide" },
+        { id: "/guide/config", title: "Configuration", section: "Guide" },
+      ],
+    });
+
+    expect(result.status).toBe("registered");
+    expect(supported.tools.map((tool) => tool.name)).toEqual([
+      "search_docs",
+      "get_doc",
+      "list_docs",
+    ]);
+    expect(supported.signals).toHaveLength(3);
+  });
+
   it("returns the same handle for sequential duplicate calls", async () => {
     const supported = createSupportedDocument();
     setDocument(supported.document);
@@ -204,9 +225,64 @@ describe("registration", () => {
     expect(result.status).toBe("failed");
     expect(supported.tools).toHaveLength(0);
   });
+
+  it("returns failed for invalid navigation pages", async () => {
+    const supported = createSupportedDocument();
+    setDocument(supported.document);
+
+    const result = await registerDocsWebMcp({
+      provider: createProvider(),
+      pages: [{ id: "/guide" }] as never,
+    });
+
+    expect(result.status).toBe("failed");
+    expect(supported.tools).toHaveLength(0);
+  });
 });
 
 describe("tool execution", () => {
+  it("lists all registered pages or filters them by section", async () => {
+    const supported = createSupportedDocument();
+    setDocument(supported.document);
+    const pages = [
+      { id: "/guide/start", title: "Start", url: "https://example.com/guide/start", section: "Guide" },
+      { id: "/guide/config", title: "Configuration", section: "Guide" },
+      { id: "/api", title: "API", section: "Reference" },
+    ];
+    await registerDocsWebMcp({ provider: createProvider(), pages });
+    const tool = getTool(supported.tools, "list_docs");
+
+    expect(tool.execute({})).toEqual({
+      ok: true,
+      data: { pages },
+    });
+    expect(tool.execute({ section: "  Guide  " })).toEqual({
+      ok: true,
+      data: { pages: pages.slice(0, 2) },
+    });
+  });
+
+  it.each([null, { section: " " }, { section: 42 }, { extra: true }])(
+    "rejects invalid list input %#",
+    async (input) => {
+      const supported = createSupportedDocument();
+      setDocument(supported.document);
+      await registerDocsWebMcp({
+        provider: createProvider(),
+        pages: [{ id: "/guide", title: "Guide" }],
+      });
+
+      const result = await getTool(supported.tools, "list_docs").execute(
+        input as Record<string, unknown>,
+      );
+
+      expect(result).toMatchObject({
+        ok: false,
+        error: { code: "INVALID_INPUT" },
+      });
+    },
+  );
+
   it("normalizes a query and delegates search", async () => {
     const search = vi.fn(() => [
       {
