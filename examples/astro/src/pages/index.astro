@@ -3,12 +3,14 @@ const documents = [
   {
     id: "/getting-started",
     title: "Getting started",
+    section: "Guides",
     excerpt: "Register webmcp-docs in an Astro page.",
     content: "# Getting started\n\nThis document is exposed through WebMCP.",
   },
   {
     id: "/provider",
     title: "Provider guide",
+    section: "Guides",
     excerpt: "Implement search and document retrieval.",
     content: "# Provider guide\n\nA provider implements search() and getDocument().",
   },
@@ -33,8 +35,8 @@ const documents = [
     <main>
       <h1>webmcp-docs Astro example</h1>
       <p>
-        このページを開くと、<code>search_docs</code> と <code>get_doc</code>
-        が WebMCP に登録されます。
+        このページを開くと、<code>search_docs</code>、<code>get_doc</code>、
+        <code>list_docs</code> が WebMCP に登録されます。
       </p>
       <p id="status" aria-live="polite">WebMCPを登録中…</p>
 
@@ -43,7 +45,7 @@ const documents = [
         {documents.map((document) => (
           <li>
             <strong>{document.title}</strong><br />
-            <span>{document.id} — {document.excerpt}</span>
+            <span>{document.id} — {document.section} — {document.excerpt}</span>
           </li>
         ))}
       </ul>
@@ -56,6 +58,7 @@ const documents = [
       type ExampleDocument = {
         id: string;
         title: string;
+        section: string;
         excerpt: string;
         content: string;
       };
@@ -64,6 +67,11 @@ const documents = [
       const documentsElement = document.querySelector("#documents");
       const documents = JSON.parse(documentsElement?.textContent ?? "[]") as ExampleDocument[];
       const registration = await registerDocsWebMcp({
+        pages: documents.map(({ id, title, section }) => ({
+          id,
+          title,
+          section,
+        })),
         provider: {
           search(query) {
             const term = query.toLowerCase();
@@ -73,7 +81,12 @@ const documents = [
                   .toLowerCase()
                   .includes(term),
               )
-              .map(({ id, title, excerpt }) => ({ id, title, excerpt }));
+              .map(({ id, title, section, excerpt }) => ({
+                id,
+                title,
+                section,
+                excerpt,
+              }));
           },
           getDocument(id) {
             const found = documents.find((document) => document.id === id);
@@ -92,7 +105,7 @@ const documents = [
       if (status) {
         status.textContent =
           registration.status === "registered"
-            ? "WebMCP登録済み: search_docs / get_doc"
+            ? "WebMCP登録済み: search_docs / get_doc / list_docs"
             : `WebMCPを登録できませんでした: ${registration.status}`;
         status.dataset.registrationStatus = registration.status;
       }
