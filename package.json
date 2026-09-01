@@ -33,6 +33,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:imports": "node scripts/smoke-imports.mjs",
+    "example:dev": "bun run build && bun --cwd examples/astro dev",
+    "example:build": "bun run build && bun --cwd examples/astro build",
     "check": "bun run typecheck && bun run test && bun run build && bun run test:imports",
     "prepublishOnly": "bun run check"
   },
@@ -51,6 +53,8 @@
   },
   "homepage": "https://github.com/link1345/webmcp-docs#readme",
   "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "astro": "^5.13.5",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
